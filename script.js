@@ -136,7 +136,6 @@ function InfixToPostfix (tokenString){
     //         output.push(token);
     //     }
     //     else if (token in operators){
-    //         // بررسی اولیت
     //         while (stck.length && stck[stck.length-1] in operators)
     //     }
     // }
@@ -201,7 +200,7 @@ function InfixToPostfix (tokenString){
 // let postfix = InfixToPostfix(tokens);
 
 // console.log([postfix.join(" ")]);
-// خروجی: 3 5 2 8 - * +
+
 
 function evaluatePostfix(postfixTokens) {
     stck = [];
@@ -231,9 +230,17 @@ function evaluatePostfix(postfixTokens) {
                     stck.push(holdingTemp);
                     break;
                 case "/":
-                    holdingTemp = temp2 / temp1;
-                    stck.push(holdingTemp);
-                    break;    
+                    if (temp1 === 0) {
+                        window.alert("Divided by Zero!");
+                        return; 
+                    } else {
+                        holdingTemp = temp2 / temp1;
+                        stck.push(holdingTemp);
+                    }
+                    break;
+                    // catch (err) {
+                    //     window.alert("The error is: " + err);
+                    // }    
             }
             
         }
