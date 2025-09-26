@@ -16,6 +16,10 @@ function appendOperatorButtons (operator){
     }
 }
 
+// function showAnswer (answer){
+//     document.getElementById("calculator_output").innerHTML = answer;
+// }
+
 
 document.addEventListener("DOMContentLoaded", function() {
     const digits = document.querySelectorAll("button.number_digits");
@@ -37,6 +41,88 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function(){
+    const equal = document.getElementById("equal_button");
+    const ta_input = document.getElementById("calculator_input");
+    // const del = document.getElementById("equal_button");
+
+    equal.addEventListener("click", function(){
+        str = ta_input.value;
+        let tokens = tokenize(str);
+        let evaluated = evaluatePostfix(InfixToPostfix(tokens));
+        document.getElementById("calculator_output").innerText = evaluated;
+    });
+
+    // del.addEventListener("click", function(){
+    //     let arr = str.split("");
+    //     str = arr.pop();
+    // });
+});
+
+
+document.addEventListener("DOMContentLoaded", function(){
+    const del = document.getElementById("backspace_button");
+    const ta_input = document.getElementById("calculator_input");
+    if (!del || !ta_input) return;
+
+    del.addEventListener("click", function(e){
+        e.preventDefault(); 
+        if (str.length > 0){
+            str = str.slice(0, -1);
+            ta_input.value = str || ""; 
+            // ta_input = str;
+            ta_input.focus();
+        }
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", function(){
+    const ac = document.getElementById("all_clear_button");
+    ta_input = document.getElementById("calculator_input");
+    output_area = document.getElementById("calculator_output");
+    
+    ac.addEventListener("click", function(e){
+        if (str.length > 0){
+            e.preventDefault();
+            str = ""; 
+            ta_input.value = "";
+            output_area.innerHTML = ""; 
+            ta_input.focus();        
+        }
+    });
+});
+
+
+function tokenize(expr) {
+    let tokens = [];
+    let numberBuffer = [];
+
+    for (let char of expr) {
+        if (!isNaN(char) && char !== " ") {
+            // اگر عدد هست، توی numberBuffer ذخیره کن
+            numberBuffer.push(char);
+        } else {
+            // اگر عملگر رسیدی و numberBuffer پره → تبدیلش کن به عدد
+            if (numberBuffer.length > 0) {
+                tokens.push(numberBuffer.join(""));
+                numberBuffer = [];
+            }
+            if (char.trim() !== "") { // حذف فاصله‌ها
+                tokens.push(char);
+            }
+        }
+    }
+
+    // اگر در انتها عدد مونده بود
+    if (numberBuffer.length > 0) {
+        tokens.push(numberBuffer.join(""));
+    }
+
+    return tokens;
+}
 
 
 function InfixToPostfix (tokenString){
